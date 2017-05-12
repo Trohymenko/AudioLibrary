@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{C8F8A845-2B22-4097-8B20-6FBC50D34157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLibrary", "AudioLibraryView\AudioLibrary.csproj", "{FF3702DF-5865-4A8E-A75D-CC2EC0BC4916}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLibrary", "AudioLibrary\AudioLibrary.csproj", "{FF3702DF-5865-4A8E-A75D-CC2EC0BC4916}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

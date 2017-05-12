@@ -1,0 +1,33 @@
+﻿@model AudioLibrary.Models.TrackViewModel
+
+<div>
+    <h4>TrackViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TrackName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TrackName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AuthorName)
+        </dd>
+        <dt>
+            @Html.Display("Author name:")
+        </dt>
+
+        <dd>
+            @ViewBag.Author.AuthorName
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
