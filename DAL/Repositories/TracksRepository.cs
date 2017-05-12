@@ -38,9 +38,9 @@ namespace DAL.Repositories
             db.SaveChanges();
         }
 
-        public IEnumerable<Track> Find(Func<Track, Boolean> predicate)
+        public Track Find(Func<Track, Boolean> predicate)
         {
-            return db.Tracks.Where(predicate).ToList();
+            return db.Tracks.Find(predicate);
         }
 
         public void Delete(int id)

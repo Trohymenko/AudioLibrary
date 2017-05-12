@@ -19,7 +19,7 @@ namespace BLL.Services
             kernel = new StandardKernel(new ServiceModule(connectionstring));
             Database = kernel.Get<ITracksUnitOfWork>();
         }
-        public void CreateTrack(TrackDTO trackDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO)
+        public void CreateTrack(TrackDTO trackDTO, AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
             Track track = Mapper.Map<TrackDTO, Track>(trackDTO);
@@ -61,8 +61,8 @@ namespace BLL.Services
                 author.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
             }
         }
-        public void CreateAlbum(AlbumDTO albumDTO, IEnumerable<GenreDTO> genresDTO
-            , AuthorDTO authorDTO, IEnumerable<TrackDTO> tracksDTO)
+        public void CreateAlbum(AlbumDTO albumDTO,AuthorDTO authorDTO,
+            IEnumerable<GenreDTO> genresDTO, IEnumerable<TrackDTO> tracksDTO)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
             Album album = Mapper.Map<AlbumDTO, Album>(albumDTO);
@@ -106,25 +106,7 @@ namespace BLL.Services
                 genre.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
             }
         }
-
-        public void DeleteTrack(int id)
-        {
-            Database.Tracks.Delete(id);
-        }
-        public void DeleteAuthor(int id)
-        {
-            Database.Authors.Delete(id);
-        }
-        public void DeleteAlbum(int id)
-        {
-            Database.Albums.Delete(id);
-        }
-        public void DeleteGenre(int id)
-        {
-            Database.Genres.Delete(id);
-        }
-
-        public void UpdateTrack(TrackDTO trackDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO)
+        public void UpdateTrack(TrackDTO trackDTO, AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
             Track track = Mapper.Map<TrackDTO, Track>(trackDTO);
@@ -166,7 +148,7 @@ namespace BLL.Services
 
             Database.Authors.Update(author);
         }
-        public void UpdateAlbum(AlbumDTO albumDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<GenreDTO> genresDTO, AuthorDTO authorDTO)
+        public void UpdateAlbum(AlbumDTO albumDTO, AuthorDTO authorDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<GenreDTO> genresDTO)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
             Album album = Mapper.Map<AlbumDTO, Album>(albumDTO);
@@ -212,6 +194,23 @@ namespace BLL.Services
 
             Database.Genres.Update(genre);
         }
+        public void DeleteTrack(int id)
+        {
+            Database.Tracks.Delete(id);
+        }
+        public void DeleteAuthor(int id)
+        {
+            Database.Authors.Delete(id);
+        }
+        public void DeleteAlbum(int id)
+        {
+            Database.Albums.Delete(id);
+        }
+        public void DeleteGenre(int id)
+        {
+            Database.Genres.Delete(id);
+        }
+
         public void Dispose()
         {
             Database.Dispose();

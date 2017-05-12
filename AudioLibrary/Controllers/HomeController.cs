@@ -18,7 +18,7 @@ namespace AudioLibrary.Controllers
             this.dbGet = dbGet;
             this.dbMod = dbMod;
         }
-        [Authorize(Roles = "admin")]
+        
         public ActionResult Index()
         {
             return View();

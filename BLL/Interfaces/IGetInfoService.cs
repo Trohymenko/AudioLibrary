@@ -17,6 +17,11 @@ namespace BLL.Interfaces
         IEnumerable<AlbumDTO> GetAllAlbums();
         IEnumerable<GenreDTO> GetAllGenres();
 
+        TrackDTO FindTrack(string field, string value);
+        AuthorDTO FindAuthor(string field, string value);
+        AlbumDTO FindAlbum(string field, string value);
+        GenreDTO FindGenre(string field, string value);
+
         IEnumerable<TrackDTO> GetTracksByAuthor(string category);
         IEnumerable<TrackDTO> GetTracksByGenre(string category);
         IEnumerable<TrackDTO> GetTracksByAlbum(string name);

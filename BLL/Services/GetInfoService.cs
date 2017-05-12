@@ -146,6 +146,134 @@ namespace BLL.Services
             }
             else throw new Exception();
         }
+        public TrackDTO FindTrack(string field, string value)
+        {          
+            Func<Track, Boolean> predicate;
+            Track trackResult = null;
+            switch (field)
+            {
+                case "Name":
+                    predicate = track => track.TrackName == value;
+                    trackResult = Database.Tracks.Find(predicate);
+                    if (trackResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
+                        return Mapper.Map<Track, TrackDTO>(trackResult);
+                    }
+                    else throw new Exception("Not found");
+                case "ID":
+                    predicate = track => track.TrackID == Int32.Parse(value);
+                    trackResult = Database.Tracks.Find(predicate);
+                    if (trackResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
+                        return Mapper.Map<Track, TrackDTO>(trackResult);
+                    }
+                    else throw new Exception("Not found");
+                case "AuthorID":
+                    predicate = track => track.AuthorID == Int32.Parse(value);
+                    trackResult = Database.Tracks.Find(predicate);
+                    if (trackResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
+                        return Mapper.Map<Track, TrackDTO>(trackResult);
+                    }
+                    else throw new Exception("Not found");
+            }
+            throw new Exception("There is no such field");        
+        }
+        public AuthorDTO FindAuthor(string field, string value)
+        {
+            Func<Author, Boolean> predicate;
+            Author authorResult = null;
+            switch (field)
+            {
+                case "Name":
+                    predicate = author => author.AuthorName == value;
+                    authorResult = Database.Authors.Find(predicate);
+                    if (authorResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorDTO>());
+                        return Mapper.Map<Author, AuthorDTO>(authorResult);
+                    }
+                    else throw new Exception("Not found");
+                case "Id":
+                    predicate = author => author.AuthorID == Int32.Parse(value);
+                    authorResult = Database.Authors.Find(predicate);
+                    if (authorResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, AuthorDTO>());
+                        return Mapper.Map<Author, AuthorDTO>(authorResult);
+                    }
+                    else throw new Exception("Not found");
+            }
+            throw new Exception("There is no such field");
+        }
+        public AlbumDTO FindAlbum(string field, string value)
+        {
+            Func<Album, Boolean> predicate;
+            Album albumResult = null;
+            switch (field)
+            {
+                case "Name":
+                    predicate = album => album.AlbumName == value;
+                    albumResult = Database.Albums.Find(predicate);
+                    if (albumResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
+                        return Mapper.Map<Album, AlbumDTO>(albumResult);
+                    }
+                    else throw new Exception("Not found");
+                case "ID":
+                    predicate = album => album.AlbumId == Int32.Parse(value);
+                    albumResult = Database.Albums.Find(predicate);
+                    if (albumResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
+                        return Mapper.Map<Album, AlbumDTO>(albumResult);
+                    }
+                    else throw new Exception("Not found");
+                case "AuthorID":
+                    predicate = album => album.AuthorID == Int32.Parse(value);
+                    albumResult = Database.Albums.Find(predicate);
+                    if (albumResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
+                        return Mapper.Map<Album, AlbumDTO>(albumResult);
+                    }
+                    else throw new Exception("Not found");
+            }
+            throw new Exception("There is no such field");
+        }
+        public GenreDTO FindGenre(string field, string value)
+        {
+            Func<Genre, Boolean> predicate;
+            Genre genreResult = null;
+            switch (field)
+            {
+                case "Name":
+                    predicate = genre => genre.GenreName == value;
+                    genreResult = Database.Genres.Find(predicate);
+                    if (genreResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreDTO>());
+                        return Mapper.Map<Genre, GenreDTO>(genreResult);
+                    }
+                    else throw new Exception("Not found");
+                case "Id":
+                    predicate = genre => genre.GenreId == Int32.Parse(value);
+                    genreResult = Database.Genres.Find(predicate);
+                    if (genreResult != null)
+                    {
+                        Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreDTO>());
+                        return Mapper.Map<Genre, GenreDTO>(genreResult);
+                    }
+                    else throw new Exception("Not found");   
+            }
+            throw new Exception("There is no such field");
+        }
+
+
         public void Dispose()
         {
             Database.Dispose();

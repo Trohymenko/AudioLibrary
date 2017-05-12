@@ -38,9 +38,9 @@ namespace DAL.Repositories
             db.SaveChanges();
         }
 
-        public IEnumerable<Genre> Find(Func<Genre, Boolean> predicate)
+        public Genre Find(Func<Genre, Boolean> predicate)
         {
-            return db.Genres.Where(predicate).ToList();
+            return db.Genres.Find(predicate);
         }
 
         public void Delete(int id)

@@ -38,9 +38,9 @@ namespace DAL.Repositories
             db.SaveChanges();
         }
 
-        public IEnumerable<Author> Find(Func<Author, Boolean> predicate)
+        public Author Find(Func<Author, Boolean> predicate)
         {
-            return db.Authors.Where(predicate).ToList();
+            return db.Authors.Find(predicate);
         }
 
         public void Delete(int id)
