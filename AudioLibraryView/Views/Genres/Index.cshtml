@@ -1,0 +1,32 @@
+﻿@model IEnumerable<AudioLibraryView.Models.GenreViewModel>
+
+<p>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GenreId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GenreName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.GenreId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GenreName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new {}) |
+            @Html.ActionLink("Details", "Details", new {}) |
+            @Html.ActionLink("Delete", "Delete", new {})
+        </td>
+    </tr>
+}
+
+</table>
