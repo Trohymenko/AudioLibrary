@@ -1,5 +1,15 @@
 ﻿@model AudioLibrary.Models.TrackViewModel
 
+@{ 
+    decimal averageRate = 0;
+    foreach (var rate in ViewBag.TrackRates)
+    {
+        averageRate += rate.RateValue;
+    }
+    averageRate /= ViewBag.TrackRates.Count();
+}
+
+
 <div>
     <h4>TrackViewModel</h4>
     <hr />
@@ -24,7 +34,6 @@
         <dd>
             @ViewBag.Author.AuthorName
         </dd>
-
     </dl>
 </div>
 <p>

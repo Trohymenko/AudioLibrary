@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using BLL.Services;
 using BLL.Interfaces;
-using BLL.DTO;
+using BLL.Entities;
 using AudioLibrary.Models;
 
 namespace AudioLibrary.Controllers
@@ -24,35 +24,57 @@ namespace AudioLibrary.Controllers
 
         public ActionResult Index()
         {
-            IEnumerable<TrackDTO> tracksDTO = dbGet.GetAllTracks();
-            Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, TrackViewModel>());
-            ICollection<TrackViewModel> trackList = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<TrackViewModel>>(tracksDTO).ToList();
-            IEnumerable < AuthorDTO > authorsDTO = dbGet.GetAllAuthors().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, AuthorViewModel>());
-            ICollection<AuthorViewModel> authors = Mapper.Map<IEnumerable<AuthorDTO>, IEnumerable<AuthorViewModel>>(authorsDTO).ToList();
+            IEnumerable<TrackBLL> tracksBLL = dbGet.GetAllTracks();
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
+            ICollection<TrackViewModel> trackList = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<TrackViewModel>>(tracksBLL).ToList();
+            IEnumerable < AuthorBLL > authorsBLL = dbGet.GetAllAuthors().ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
+            ICollection<AuthorViewModel> authors = Mapper.Map<IEnumerable<AuthorBLL>, IEnumerable<AuthorViewModel>>(authorsBLL).ToList();
             ViewBag.Authors = authors;
             return View(trackList);
         }
 
         // GET: Tracks/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            TrackDTO dbTrack = dbGet.GetTrack(id);
-            Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, TrackViewModel>());
-            TrackViewModel track = Mapper.Map<TrackDTO, TrackViewModel>(dbTrack);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(404);
+            }
+
+            TrackBLL dbTrack = dbGet.GetTrack((int)id);
+            {
+                if (dbTrack == null)
+                {
+                    return HttpNotFound();
+                }
+            }
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
+            TrackViewModel track = Mapper.Map<TrackBLL, TrackViewModel>(dbTrack);
 
 
             if (dbTrack.AuthorID != null)
             {
-                AuthorDTO authorDTO = dbGet.GetAuthor((int)dbTrack.AuthorID);
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, AuthorViewModel>());
-                AuthorViewModel author = Mapper.Map<AuthorDTO, AuthorViewModel>
-                    (authorDTO);
+                AuthorBLL authorBLL = dbGet.GetAuthor((int)dbTrack.AuthorID);
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
+                AuthorViewModel author = Mapper.Map<AuthorBLL, AuthorViewModel>
+                    (authorBLL);
                 ViewBag.Author = author;
-                return PartialView(track);
+            }
+            var ratings = dbGet.GetTrackRate(dbTrack.TrackName);
+            if (ratings.Count() > 0)
+            {
+                var ratingSum = ratings.Sum(d => d.AlbumRateValue);
+                ViewBag.RatingSum = ratingSum;
+                var ratingCount = ratings.Count();
+                ViewBag.RatingCount = ratingCount;
             }
             else
-                return PartialView("Details2", track);
+            {
+                ViewBag.RatingSum = 0;
+                ViewBag.RatingCount = 0;
+            }
+            return PartialView(track);
         }
 
         // GET: Tracks/Create

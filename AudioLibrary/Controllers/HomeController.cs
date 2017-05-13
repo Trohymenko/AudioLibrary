@@ -3,8 +3,11 @@ using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using BLL.Interfaces;
-using BLL.DTO;
+using BLL.Entities;
 using AudioLibrary.Models;
+using System.Text.RegularExpressions;
+using System;
+using System.Web;
 
 namespace AudioLibrary.Controllers
 {
@@ -12,11 +15,13 @@ namespace AudioLibrary.Controllers
     {
         IGetInfoService dbGet;
         IModifyService dbMod;
+        ISearchService dbSearch;
 
-        public HomeController(IGetInfoService dbGet, IModifyService dbMod)
+        public HomeController(IGetInfoService dbGet, IModifyService dbMod, ISearchService dbSearch)
         {
             this.dbGet = dbGet;
             this.dbMod = dbMod;
+            this.dbSearch = dbSearch;
         }
         
         public ActionResult Index()
@@ -25,38 +30,112 @@ namespace AudioLibrary.Controllers
         }
 
         [HttpPost]
-        public ActionResult TrackSearch(string name)
+        public void PostTrackRate(int trackId, int rate)
         {
-            IEnumerable<TrackDTO> tracks = null;
-            if (name.Length != 0)
-            {
-                 tracks = dbGet.GetAllTracks().ToList().Where(track => track.TrackName == name);
-            }
-            else
-            {
-                 tracks = dbGet.GetAllTracks().ToList();
-            }
-            Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, TrackViewModel>());
-            ICollection<TrackViewModel> trackList =  Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<TrackViewModel>>(tracks).ToList();
-            if (tracks.Count() <= 0)
-            {
-                return HttpNotFound();
-            }
-            return PartialView(trackList);
+
+
         }
+        
+        [HttpPost]
+        public ActionResult Search(string name, string searchCategory)
+        {
+            switch (searchCategory)
+            {
+                case "Tracks":
+                    IEnumerable<TrackBLL> tracks = null;
+
+                    if (name.Length != 0)
+                    {
+                        tracks = dbSearch.SearchForTrack("Tracks", name);
+                    }
+                    else
+                    {
+                        tracks = dbGet.GetAllTracks().ToList();
+                    }
+                    if (tracks.Count() <= 0)
+                    {
+                        return PartialView("NotFound");
+                    }
+                    Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
+                    ICollection<TrackViewModel> trackList = 
+                        Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<TrackViewModel>>(tracks).ToList();
+                    return View("TrackSearch",trackList);
+
+                case "Authors":
+                    IEnumerable<AuthorBLL> authors = null;
+                    if (name.Length != 0)
+                    {
+                        authors = dbSearch.SearchForAuthor("Authors", name);
+                    }
+                    else
+                    {
+                        authors = dbGet.GetAllAuthors().ToList();
+                    }
+                    if (authors.Count() <= 0)
+                    {
+                        return HttpNotFound();
+                    }
+                    Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
+                    ICollection<AuthorViewModel> authorList =
+                        Mapper.Map<IEnumerable<AuthorBLL>, IEnumerable<AuthorViewModel>>(authors).ToList();
+                    return View("AuthorSearch",authorList);
+
+                case "Albums":
+                    IEnumerable<AlbumBLL> albums = null;
+                    if (name.Length != 0)
+                    {
+                        albums = dbSearch.SearchForAlbum("Albums", name);
+                    }
+                    else
+                    {
+                        albums = dbGet.GetAllAlbums().ToList();
+                    }
+                    if (albums.Count() <= 0)
+                    {
+                        return HttpNotFound();
+                    }
+                    Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, AlbumViewModel>());
+                    ICollection<AlbumViewModel> albumList = 
+                        Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<AlbumViewModel>>(albums).ToList();
+                    return View("AlbumSearch",albumList);
+
+                case "Genres":
+                    IEnumerable<GenreBLL> genres = null;
+                    if (name.Length != 0)
+                    {
+                        genres = dbSearch.SearchForGenre("Genres", name);
+                    }
+                    else
+                    {
+                        albums = dbGet.GetAllAlbums().ToList();
+                    }
+                    if (genres.Count() <= 0)
+                    {
+                        return HttpNotFound();
+                    }
+                    Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, GenreViewModel>());
+                    ICollection<GenreViewModel> genreList = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<GenreViewModel>>(genres).ToList();
+                    return View("GenreSearch",genreList);
+            }           
+            return View();
+            }
         public ActionResult Details(int id)
         {
-            TrackDTO dbTrack = dbGet.GetTrack(id);
-            Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, TrackViewModel>());
-            TrackViewModel track = Mapper.Map<TrackDTO, TrackViewModel>(dbTrack);
-            
-            
+            TrackBLL dbTrack = dbGet.GetTrack(id);
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
+            TrackViewModel track = Mapper.Map<TrackBLL, TrackViewModel>(dbTrack);
+
+            IEnumerable<TrackRateBLL> trackRates = dbGet.GetTrackRate(dbTrack.TrackName);
+
+            ViewBag.TrackRates = trackRates;
+
+
             if (dbTrack.AuthorID != null)
             {
-                AuthorDTO authorDTO = dbGet.GetAuthor((int)dbTrack.AuthorID);
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, AuthorViewModel>());
-                AuthorViewModel author = Mapper.Map<AuthorDTO, AuthorViewModel>
-                    (authorDTO);
+                AuthorBLL authorBLL = dbGet.GetAuthor((int)dbTrack.AuthorID);
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
+                AuthorViewModel author = Mapper.Map<AuthorBLL, AuthorViewModel>
+                    (authorBLL);
                 ViewBag.Author = author;
                 return PartialView(track);
             }

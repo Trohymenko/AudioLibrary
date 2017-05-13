@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BLL.DTO;
+using BLL.Entities;
 
 namespace BLL.Interfaces
 {
     public interface IModifyService
     {
-        void CreateTrack(TrackDTO trackDTO, AuthorDTO authorDTO,IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO);
-        void CreateGenre(GenreDTO genreDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<AlbumDTO> albumsDTO, IEnumerable<AuthorDTO> authorsDTO);
-        void CreateAuthor(AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO, IEnumerable<TrackDTO> tracksDTO);
-        void CreateAlbum(AlbumDTO albumDTO, AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<TrackDTO> tracksDTO);
+        void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL,IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL);
+        void CreateGenre(GenreBLL genreBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<AuthorBLL> authorsBLL);
+        void CreateAuthor(AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<TrackBLL> tracksBLL);
+        void CreateAlbum(AlbumBLL albumBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<TrackBLL> tracksBLL);
 
-        void UpdateTrack(TrackDTO trackDTO, AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO);
-        void UpdateGenre(GenreDTO genreDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<AlbumDTO> albumsDTO, IEnumerable<AuthorDTO> authorsDTO);
-        void UpdateAlbum(AlbumDTO albumDTO, AuthorDTO authorDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<GenreDTO> genresDTO);
-        void UpdateAuthor(AuthorDTO authorDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<AlbumDTO> authorsDTO, IEnumerable<GenreDTO> genresDTO);
+        void UpdateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL);
+        void UpdateGenre(GenreBLL genreBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<AuthorBLL> authorsBLL);
+        void UpdateAlbum(AlbumBLL albumBLL, AuthorBLL authorBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<GenreBLL> genresBLL);
+        void UpdateAuthor(AuthorBLL authorBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> authorsBLL, IEnumerable<GenreBLL> genresBLL);
 
+        void PostTrackRate(TrackRateBLL trackRateBLL);
+        void PostAlbumRate(AlbumRateBLL albumRateBLL);
+
+        void DeleteTrackRate(TrackRateBLL trackRateBLL);
+        void DeleteAlbumRate(AlbumRateBLL albumRateBLL);
+    
         void DeleteTrack(int id);
         void DeleteGenre(int id);
         void DeleteAuthor(int id);

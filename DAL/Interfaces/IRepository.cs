@@ -8,7 +8,7 @@ namespace DAL.Interfaces
 {
     public interface IRepository<T>
     {
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(Func<T, bool> predicate);
         T Get(int id);
         void Create(T item);
         void Update(T item);

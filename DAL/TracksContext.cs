@@ -14,6 +14,8 @@ namespace DAL
         public DbSet<Album> Albums { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<TrackRate> TracksRates { get; set; }
+        public DbSet<AlbumRate> AlbumsRates { get; set; }
 
 
         static TracksContext()
@@ -60,11 +62,17 @@ namespace DAL
             BreakBeat.Authors.Add(TheProdigy);
             Country.Authors.Add(JohnnyCash);
 
-
             db.Genres.AddRange(new List<Genre>{Blues, BreakBeat, Country});
             db.SaveChanges();
 
-        
+            TrackRate rate1 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 0, TrackRateValue = 4, UserName = "user1" };
+            TrackRate rate2 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 1, TrackRateValue = 5, UserName = "user2" };
+            TrackRate rate3 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 2, TrackRateValue = 3, UserName = "user3" };
+            TrackRate rate4 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 3, TrackRateValue = 2, UserName = "user4" };
+            TrackRate rate5 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 4, TrackRateValue = 5, UserName = "user5" };
+
+            IEnumerable<TrackRate> rates = new List<TrackRate> { rate1, rate2, rate3, rate4, rate5 };
+            db.TracksRates.AddRange(rates);
 
         }
     }

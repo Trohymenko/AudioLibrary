@@ -15,6 +15,7 @@ namespace DAL.Entities
         public Author Author { get; set; }
         public virtual ICollection<Album> Albums { get; set; }
         public virtual ICollection<Genre> Genres { get; set; }
+        public virtual ICollection<TrackRate> TrackRates { get; set; }
         public Track()
         {
             Albums = new List<Album>();

@@ -50,15 +50,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Album.cs" />
+    <Compile Include="Entities\AlbumRate.cs" />
     <Compile Include="Entities\Author.cs" />
     <Compile Include="Entities\Genre.cs" />
     <Compile Include="Entities\Track.cs" />
+    <Compile Include="Entities\TrackRate.cs" />
+    <Compile Include="Interfaces\IRatesUnitOfWork.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\ITracksUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RatesUnitOfWork.cs" />
+    <Compile Include="Repositories\AlbumsRatesRepository.cs" />
     <Compile Include="Repositories\AlbumsRepository.cs" />
     <Compile Include="Repositories\AuthorsRepository.cs" />
     <Compile Include="Repositories\GenresRepository.cs" />
+    <Compile Include="Repositories\TracksRatesRepository.cs" />
     <Compile Include="Repositories\TracksRepository.cs" />
     <Compile Include="TracksContext.cs" />
     <Compile Include="TracksUnitOfWork.cs" />

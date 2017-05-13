@@ -8,7 +8,7 @@ using DAL.Entities;
 using Ninject;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using BLL.DTO;
+using BLL.Entities;
 using AutoMapper;
 using System.Linq.Expressions;
 
@@ -17,6 +17,7 @@ namespace BLL.Services
     public class GetInfoService : IGetInfoService
     {
         ITracksUnitOfWork Database { get; set; }
+
         public static IKernel kernel;
 
         public GetInfoService(string connectionstring)
@@ -24,129 +25,143 @@ namespace BLL.Services
             kernel = new StandardKernel(new ServiceModule(connectionstring));
             Database = kernel.Get<ITracksUnitOfWork>();
         }
-        public IEnumerable<TrackDTO> GetAllTracks(Func<TrackDTO, bool> predicate)
+        public IEnumerable<TrackBLL> GetAllTracks(Func<TrackBLL, bool> predicate)
         {
             //todo
             return null;
         }
-        public IEnumerable<TrackDTO> GetAllTracks()
+        public IEnumerable<TrackBLL> GetAllTracks()
         {
-            IEnumerable<Track> trackList = Database.Tracks.GetAll();
+            IEnumerable<Track> trackList = Database.Tracks.GetAll(track => true);
             if (trackList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackDTO>>(trackList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }
             else throw new Exception();
         }
 
-        public IEnumerable<AlbumDTO> GetAllAlbums()
+        public IEnumerable<AlbumBLL> GetAllAlbums()
         {
-            IEnumerable<Album> albumList = Database.Albums.GetAll();
+            IEnumerable<Album> albumList = Database.Albums.GetAll(album => true);
             if (albumList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
-                return Mapper.Map<IEnumerable<Album>, IEnumerable<AlbumDTO>>(albumList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumBLL>());
+                return Mapper.Map<IEnumerable<Album>, IEnumerable<AlbumBLL>>(albumList);
             }
             else throw new Exception();
         }
 
-        public IEnumerable<AuthorDTO> GetAllAuthors()
+        public IEnumerable<AuthorBLL> GetAllAuthors()
         {
-            IEnumerable<Author> authorList = Database.Authors.GetAll();
+            IEnumerable<Author> authorList = Database.Authors.GetAll(author => true);
             if (authorList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorDTO>());
-                return Mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDTO>>(authorList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorBLL>());
+                return Mapper.Map<IEnumerable<Author>, IEnumerable<AuthorBLL>>(authorList);
             }
             else throw new Exception();
         }
-        public IEnumerable<GenreDTO> GetAllGenres()
+        public IEnumerable<GenreBLL> GetAllGenres()
         {
-            IEnumerable<Genre> authorList = Database.Genres.GetAll();
+            IEnumerable<Genre> authorList = Database.Genres.GetAll(author => true);
             if (authorList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreDTO>());
-                return Mapper.Map<IEnumerable<Genre>, IEnumerable<GenreDTO>>(authorList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreBLL>());
+                return Mapper.Map<IEnumerable<Genre>, IEnumerable<GenreBLL>>(authorList);
             }
             else throw new Exception();
         }
 
-        public TrackDTO GetTrack(int id)
+        public IEnumerable<TrackRateBLL> GetTrackRate(string name)
+        {
+            IEnumerable<TrackRate> trackRatesDb = Database.Tracks.GetAll(track => track.TrackName == name).FirstOrDefault().TrackRates;
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackRate, TrackRateBLL>());
+            return Mapper.Map<IEnumerable<TrackRate>, IEnumerable<TrackRateBLL>>(trackRatesDb);
+
+
+        }
+
+        public IEnumerable<AlbumRateBLL> GetAlbumRate(string name)
+        {
+            return null;
+        }
+
+        public TrackBLL GetTrack(int id)
         {
             Track track = Database.Tracks.Get(id);
             if (track != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                return Mapper.Map<Track, TrackDTO>(track);
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                return Mapper.Map<Track, TrackBLL>(track);
             }
             else throw new Exception();
         }
 
-        public AuthorDTO GetAuthor(int id)
+        public AuthorBLL GetAuthor(int id)
         {
             Author author = Database.Authors.Get(id);
             if (author != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorDTO>());
-                return Mapper.Map<Author, AuthorDTO>(author);
+                Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorBLL>());
+                return Mapper.Map<Author, AuthorBLL>(author);
             }
             else throw new Exception();
         }
 
-        public AlbumDTO GetAlbum(int id)
+        public AlbumBLL GetAlbum(int id)
         {
             Album album = Database.Albums.Get(id);
             if (album != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
-                return Mapper.Map<Album, AlbumDTO>(album);
+                Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumBLL>());
+                return Mapper.Map<Album, AlbumBLL>(album);
             }
             else throw new Exception();
         }
-        public GenreDTO GetGenre(int id)
+        public GenreBLL GetGenre(int id)
         {
             Genre genre = Database.Genres.Get(id);
             if (genre != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreDTO>());
-                return Mapper.Map<Genre, GenreDTO>(genre);
+                Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreBLL>());
+                return Mapper.Map<Genre, GenreBLL>(genre);
             }
             else throw new Exception();
         }
-        public IEnumerable<TrackDTO> GetTracksByAuthor(string name)
+        public IEnumerable<TrackBLL> GetTracksByAuthor(string name)
         {
-            IEnumerable<Track> trackList = Database.Tracks.GetAll().Where(x => x.Author.AuthorName == name).ToList();
+            IEnumerable<Track> trackList = Database.Tracks.GetAll(track=>true).Where(x => x.Author.AuthorName == name).ToList();
             if (trackList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackDTO>>(trackList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }
             else throw new Exception();
         }
-        public IEnumerable<TrackDTO> GetTracksByGenre(string name)
+        public IEnumerable<TrackBLL> GetTracksByGenre(string name)
         {
-            IEnumerable<Track> trackList = Database.Genres.GetAll()
+            IEnumerable<Track> trackList = Database.Genres.GetAll(genre=>true)
                 .Select(genre => genre.Tracks).FirstOrDefault();
             if (trackList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackDTO>>(trackList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }
             else throw new Exception();
         }
-        public IEnumerable<TrackDTO> GetTracksByAlbum(string name)
+        public IEnumerable<TrackBLL> GetTracksByAlbum(string name)
         {
-            IEnumerable<Track> trackList = Database.Albums.GetAll().Where(x => x.AlbumName == name)
+            IEnumerable<Track> trackList = Database.Albums.GetAll(album=>true).Where(album => album.AlbumName == name)
                 .Select(album => album.Tracks).FirstOrDefault();
             if (trackList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackDTO>>(trackList);
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }
             else throw new Exception();
         }
-        public TrackDTO FindTrack(string field, string value)
+        public TrackBLL FindTrack(string field, string value)
         {          
             Func<Track, Boolean> predicate;
             Track trackResult = null;
@@ -157,8 +172,8 @@ namespace BLL.Services
                     trackResult = Database.Tracks.Find(predicate);
                     if (trackResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                        return Mapper.Map<Track, TrackDTO>(trackResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                        return Mapper.Map<Track, TrackBLL>(trackResult);
                     }
                     else throw new Exception("Not found");
                 case "ID":
@@ -166,8 +181,8 @@ namespace BLL.Services
                     trackResult = Database.Tracks.Find(predicate);
                     if (trackResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                        return Mapper.Map<Track, TrackDTO>(trackResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                        return Mapper.Map<Track, TrackBLL>(trackResult);
                     }
                     else throw new Exception("Not found");
                 case "AuthorID":
@@ -175,14 +190,14 @@ namespace BLL.Services
                     trackResult = Database.Tracks.Find(predicate);
                     if (trackResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackDTO>());
-                        return Mapper.Map<Track, TrackDTO>(trackResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                        return Mapper.Map<Track, TrackBLL>(trackResult);
                     }
                     else throw new Exception("Not found");
             }
             throw new Exception("There is no such field");        
         }
-        public AuthorDTO FindAuthor(string field, string value)
+        public AuthorBLL FindAuthor(string field, string value)
         {
             Func<Author, Boolean> predicate;
             Author authorResult = null;
@@ -193,8 +208,8 @@ namespace BLL.Services
                     authorResult = Database.Authors.Find(predicate);
                     if (authorResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorDTO>());
-                        return Mapper.Map<Author, AuthorDTO>(authorResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorBLL>());
+                        return Mapper.Map<Author, AuthorBLL>(authorResult);
                     }
                     else throw new Exception("Not found");
                 case "Id":
@@ -202,14 +217,14 @@ namespace BLL.Services
                     authorResult = Database.Authors.Find(predicate);
                     if (authorResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Track, AuthorDTO>());
-                        return Mapper.Map<Author, AuthorDTO>(authorResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Track, AuthorBLL>());
+                        return Mapper.Map<Author, AuthorBLL>(authorResult);
                     }
                     else throw new Exception("Not found");
             }
             throw new Exception("There is no such field");
         }
-        public AlbumDTO FindAlbum(string field, string value)
+        public AlbumBLL FindAlbum(string field, string value)
         {
             Func<Album, Boolean> predicate;
             Album albumResult = null;
@@ -220,8 +235,8 @@ namespace BLL.Services
                     albumResult = Database.Albums.Find(predicate);
                     if (albumResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
-                        return Mapper.Map<Album, AlbumDTO>(albumResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumBLL>());
+                        return Mapper.Map<Album, AlbumBLL>(albumResult);
                     }
                     else throw new Exception("Not found");
                 case "ID":
@@ -229,8 +244,8 @@ namespace BLL.Services
                     albumResult = Database.Albums.Find(predicate);
                     if (albumResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
-                        return Mapper.Map<Album, AlbumDTO>(albumResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumBLL>());
+                        return Mapper.Map<Album, AlbumBLL>(albumResult);
                     }
                     else throw new Exception("Not found");
                 case "AuthorID":
@@ -238,14 +253,14 @@ namespace BLL.Services
                     albumResult = Database.Albums.Find(predicate);
                     if (albumResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumDTO>());
-                        return Mapper.Map<Album, AlbumDTO>(albumResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumBLL>());
+                        return Mapper.Map<Album, AlbumBLL>(albumResult);
                     }
                     else throw new Exception("Not found");
             }
             throw new Exception("There is no such field");
         }
-        public GenreDTO FindGenre(string field, string value)
+        public GenreBLL FindGenre(string field, string value)
         {
             Func<Genre, Boolean> predicate;
             Genre genreResult = null;
@@ -256,8 +271,8 @@ namespace BLL.Services
                     genreResult = Database.Genres.Find(predicate);
                     if (genreResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreDTO>());
-                        return Mapper.Map<Genre, GenreDTO>(genreResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreBLL>());
+                        return Mapper.Map<Genre, GenreBLL>(genreResult);
                     }
                     else throw new Exception("Not found");
                 case "Id":
@@ -265,8 +280,8 @@ namespace BLL.Services
                     genreResult = Database.Genres.Find(predicate);
                     if (genreResult != null)
                     {
-                        Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreDTO>());
-                        return Mapper.Map<Genre, GenreDTO>(genreResult);
+                        Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreBLL>());
+                        return Mapper.Map<Genre, GenreBLL>(genreResult);
                     }
                     else throw new Exception("Not found");   
             }

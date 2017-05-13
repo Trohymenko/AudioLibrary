@@ -4,7 +4,7 @@ using DAL.Interfaces;
 using DAL.Entities;
 using Ninject;
 using AutoMapper;
-using BLL.DTO;
+using BLL.Entities;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 
@@ -12,208 +12,237 @@ namespace BLL.Services
 {
     public class ModifyService : IModifyService
     {
-        ITracksUnitOfWork Database { get; set; }
+        ITracksUnitOfWork TracksDB { get; set; }
+        IRatesUnitOfWork RatesDB { get; set; }
         public static IKernel kernel;
         public ModifyService(string connectionstring)
         {
             kernel = new StandardKernel(new ServiceModule(connectionstring));
-            Database = kernel.Get<ITracksUnitOfWork>();
+            TracksDB = kernel.Get<ITracksUnitOfWork>();
         }
-        public void CreateTrack(TrackDTO trackDTO, AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO)
+        public void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-            Track track = Mapper.Map<TrackDTO, Track>(trackDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+            Track track = Mapper.Map<TrackBLL, Track>(trackBLL);
 
-            if (genresDTO != null)
+            if (genresBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-                track.Genres = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<Genre>>(genresDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+                track.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }
 
-            if (albumsDTO != null)
+            if (albumsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-                track.Albums = Mapper.Map<IEnumerable<AlbumDTO>, IEnumerable<Album>>(albumsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+                track.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
             }
-            Database.Tracks.Create(track);
+            TracksDB.Tracks.Create(track);
         }
 
-        public void CreateAuthor(AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO
-            , IEnumerable<AlbumDTO> albumsDTO, IEnumerable<TrackDTO> tracksDTO)
+        public void CreateAuthor(AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL
+            , IEnumerable<AlbumBLL> albumsBLL, IEnumerable<TrackBLL> tracksBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, Author>());
-            Author author = Mapper.Map<AuthorDTO, Author>(authorDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+            Author author = Mapper.Map<AuthorBLL, Author>(authorBLL);
 
-            if (genresDTO != null)
+            if (genresBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-                author.Genres = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<Genre>>(genresDTO).ToList();
-            }
-
-            if (albumsDTO != null)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-                author.Albums = Mapper.Map<IEnumerable<AlbumDTO>, IEnumerable<Album>>(albumsDTO).ToList();
-            }
-            if (tracksDTO != null)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-                author.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
-            }
-        }
-        public void CreateAlbum(AlbumDTO albumDTO,AuthorDTO authorDTO,
-            IEnumerable<GenreDTO> genresDTO, IEnumerable<TrackDTO> tracksDTO)
-        {
-            Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-            Album album = Mapper.Map<AlbumDTO, Album>(albumDTO);
-
-            if (genresDTO != null)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-                album.Genres = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<Genre>>(genresDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+                author.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }
 
-            if (authorDTO != null)
+            if (albumsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, Author>());
-                album.Author = Mapper.Map<AuthorDTO, Author>(authorDTO);
+                Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+                author.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
             }
-            if (tracksDTO != null)
+            if (tracksBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-                album.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+                author.Tracks = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<Track>>(tracksBLL).ToList();
             }
         }
-        public void CreateGenre(GenreDTO genreDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<AlbumDTO> albumsDTO, IEnumerable<AuthorDTO> authorsDTO)
+        public void CreateAlbum(AlbumBLL albumBLL,AuthorBLL authorBLL,
+            IEnumerable<GenreBLL> genresBLL, IEnumerable<TrackBLL> tracksBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-            Genre genre = Mapper.Map<GenreDTO, Genre>(genreDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+            Album album = Mapper.Map<AlbumBLL, Album>(albumBLL);
 
-            if (albumsDTO != null)
+            if (genresBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-                genre.Albums = Mapper.Map<IEnumerable<AlbumDTO>, IEnumerable<Album>>(albumsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+                album.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }
 
-            if (authorsDTO != null)
+            if (authorBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, Author>());
-                genre.Authors = Mapper.Map<IEnumerable<AuthorDTO>, IEnumerable<Author>>(authorsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+                album.Author = Mapper.Map<AuthorBLL, Author>(authorBLL);
             }
-            if (tracksDTO != null)
+            if (tracksBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-                genre.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+                album.Tracks = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<Track>>(tracksBLL).ToList();
             }
         }
-        public void UpdateTrack(TrackDTO trackDTO, AuthorDTO authorDTO, IEnumerable<GenreDTO> genresDTO, IEnumerable<AlbumDTO> albumsDTO)
+        public void CreateGenre(GenreBLL genreBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<AuthorBLL> authorsBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-            Track track = Mapper.Map<TrackDTO, Track>(trackDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+            Genre genre = Mapper.Map<GenreBLL, Genre>(genreBLL);
 
-            if (genresDTO != null)
+            if (albumsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-                track.Genres = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<Genre>>(genresDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+                genre.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
             }
 
-            if (albumsDTO != null)
+            if (authorsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-                track.Albums = Mapper.Map<IEnumerable<AlbumDTO>, IEnumerable<Album>>(albumsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+                genre.Authors = Mapper.Map<IEnumerable<AuthorBLL>, IEnumerable<Author>>(authorsBLL).ToList();
             }
-            Database.Tracks.Update(track);
+            if (tracksBLL != null)
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+                genre.Tracks = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<Track>>(tracksBLL).ToList();
+            }
+            TracksDB.Genres.Create(genre);
         }
-        public void UpdateAuthor(AuthorDTO authorDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<AlbumDTO> albumsDTO, IEnumerable<GenreDTO> genresDTO)
+        public void UpdateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, Author>());
-            Author author = Mapper.Map<AuthorDTO, Author>(authorDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+            Track track = Mapper.Map<TrackBLL, Track>(trackBLL);
 
-            if (genresDTO != null)
+            if (genresBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-                author.Genres = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<Genre>>(genresDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+                track.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }
 
-            if (albumsDTO != null)
+            if (albumsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-                author.Albums = Mapper.Map<IEnumerable<AlbumDTO>, IEnumerable<Album>>(albumsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+                track.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
             }
-            if (tracksDTO != null)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-                author.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
-            }
-
-            Database.Authors.Update(author);
+            TracksDB.Tracks.Update(track);
         }
-        public void UpdateAlbum(AlbumDTO albumDTO, AuthorDTO authorDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<GenreDTO> genresDTO)
+        public void UpdateAuthor(AuthorBLL authorBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<GenreBLL> genresBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-            Album album = Mapper.Map<AlbumDTO, Album>(albumDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+            Author author = Mapper.Map<AuthorBLL, Author>(authorBLL);
 
-            if (genresDTO != null)
+            if (genresBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-                album.Genres = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<Genre>>(genresDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+                author.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
+            }
+
+            if (albumsBLL != null)
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+                author.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
+            }
+            if (tracksBLL != null)
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+                author.Tracks = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<Track>>(tracksBLL).ToList();
+            }
+
+            TracksDB.Authors.Update(author);
+        }
+        public void UpdateAlbum(AlbumBLL albumBLL, AuthorBLL authorBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<GenreBLL> genresBLL)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+            Album album = Mapper.Map<AlbumBLL, Album>(albumBLL);
+
+            if (genresBLL != null)
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+                album.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }         
-            if (tracksDTO != null)
+            if (tracksBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-                album.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+                album.Tracks = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<Track>>(tracksBLL).ToList();
             }
-            if (authorDTO != null)
+            if (authorBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, Author>());
-                album.Author = Mapper.Map<AuthorDTO, Author>(authorDTO);
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+                album.Author = Mapper.Map<AuthorBLL, Author>(authorBLL);
             }
 
-            Database.Albums.Update(album);
+            TracksDB.Albums.Update(album);
         }
-        public void UpdateGenre(GenreDTO genreDTO, IEnumerable<TrackDTO> tracksDTO, IEnumerable<AlbumDTO> albumsDTO, IEnumerable<AuthorDTO> authorsDTO)
+        public void UpdateGenre(GenreBLL genreBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<AuthorBLL> authorsBLL)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, Genre>());
-            Genre genre = Mapper.Map<GenreDTO, Genre>(genreDTO);
+            Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
+            Genre genre = Mapper.Map<GenreBLL, Genre>(genreBLL);
 
-            if (albumsDTO != null)
+            if (albumsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-                genre.Albums = Mapper.Map<IEnumerable<AlbumDTO>, IEnumerable<Album>>(albumsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
+                genre.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
             }
-            if (tracksDTO != null)
+            if (tracksBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<TrackDTO, Track>());
-                genre.Tracks = Mapper.Map<IEnumerable<TrackDTO>, IEnumerable<Track>>(tracksDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
+                genre.Tracks = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<Track>>(tracksBLL).ToList();
             }
-            if (authorsDTO != null)
+            if (authorsBLL != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorDTO, Author>());
-                genre.Authors = Mapper.Map<IEnumerable<AuthorDTO>, IEnumerable<Author>>(authorsDTO).ToList();
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+                genre.Authors = Mapper.Map<IEnumerable<AuthorBLL>, IEnumerable<Author>>(authorsBLL).ToList();
             }
 
-            Database.Genres.Update(genre);
+            TracksDB.Genres.Update(genre);
         }
+        public void PostTrackRate(TrackRateBLL trackRateBLL)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackRateBLL, TrackRate>());
+            TrackRate trackRate = Mapper.Map<TrackRateBLL, TrackRate>(trackRateBLL);
+            RatesDB.TracksRates.Create(trackRate);
+        }
+        public void PostAlbumRate(AlbumRateBLL albumRateBLL)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<AlbumRateBLL, AlbumRate>());
+            AlbumRate albumRate = Mapper.Map<AlbumRateBLL, AlbumRate>(albumRateBLL);
+            RatesDB.AlbumsRates.Delete(albumRate.AlbumRateId);
+        }
+
+        public void DeleteTrackRate(TrackRateBLL trackRateBLL)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackRateBLL, TrackRate>());
+            TrackRate trackRate = Mapper.Map<TrackRateBLL, TrackRate>(trackRateBLL);
+            RatesDB.TracksRates.Delete(trackRate.TrackRateId);
+        }
+        public void DeleteAlbumRate(AlbumRateBLL albumRateBLL)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<AlbumRateBLL, AlbumRate>());
+            AlbumRate albumRate = Mapper.Map<AlbumRateBLL, AlbumRate>(albumRateBLL);
+            RatesDB.AlbumsRates.Delete(albumRate.AlbumRateId);
+        }
+
         public void DeleteTrack(int id)
         {
-            Database.Tracks.Delete(id);
+             TracksDB.Tracks.Delete(id);
         }
         public void DeleteAuthor(int id)
         {
-            Database.Authors.Delete(id);
+            TracksDB.Authors.Delete(id);
         }
         public void DeleteAlbum(int id)
         {
-            Database.Albums.Delete(id);
+            TracksDB.Albums.Delete(id);
         }
         public void DeleteGenre(int id)
         {
-            Database.Genres.Delete(id);
+            TracksDB.Genres.Delete(id);
         }
 
         public void Dispose()
         {
-            Database.Dispose();
+            TracksDB.Dispose();
+            RatesDB.Dispose();
         }
     }
 }

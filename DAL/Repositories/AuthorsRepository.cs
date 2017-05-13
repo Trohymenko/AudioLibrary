@@ -16,9 +16,9 @@ namespace DAL.Repositories
         {
             this.db = context;
         }
-        public IEnumerable<Author> GetAll()
+        public IEnumerable<Author> GetAll(Func<Author, bool> predicate)
         {
-            return db.Authors;
+            return db.Authors.Where(predicate);
         }
 
         public Author Get(int id)

@@ -16,9 +16,9 @@ namespace DAL.Repositories
         {
             this.db = context;
         }
-        public IEnumerable<Genre> GetAll()
+        public IEnumerable<Genre> GetAll(Func<Genre, bool> predicate)
         {
-            return db.Genres;
+            return db.Genres.Where(predicate);
         }
 
         public Genre Get(int id)

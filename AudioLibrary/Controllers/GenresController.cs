@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using BLL.Interfaces;
-using BLL.DTO;
+using BLL.Entities;
 using AudioLibrary.Models;
 
 namespace AudioLibrary.Controllers
@@ -21,9 +21,9 @@ namespace AudioLibrary.Controllers
 
         public ActionResult Index()
         {
-            IEnumerable<GenreDTO> genresDTO = dbGet.GetAllGenres();
-            Mapper.Initialize(cfg => cfg.CreateMap<GenreDTO, GenreViewModel>());
-            ICollection<GenreViewModel> genreList = Mapper.Map<IEnumerable<GenreDTO>, IEnumerable<GenreViewModel>>(genresDTO).ToList();
+            IEnumerable<GenreBLL> genresBLL = dbGet.GetAllGenres();
+            Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, GenreViewModel>());
+            ICollection<GenreViewModel> genreList = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<GenreViewModel>>(genresBLL).ToList();
             return View(genreList);
         }
 

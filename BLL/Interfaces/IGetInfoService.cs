@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BLL.DTO;
+using BLL.Entities;
 
 namespace BLL.Interfaces
 {
     public interface IGetInfoService
     {
-        TrackDTO GetTrack(int id);
-        AuthorDTO GetAuthor(int id);
-        AlbumDTO GetAlbum(int id);
-        GenreDTO GetGenre(int id);
+        TrackBLL GetTrack(int id);
+        AuthorBLL GetAuthor(int id);
+        AlbumBLL GetAlbum(int id);
+        GenreBLL GetGenre(int id);
  
-        IEnumerable<TrackDTO> GetAllTracks();
-        IEnumerable<AuthorDTO> GetAllAuthors();
-        IEnumerable<AlbumDTO> GetAllAlbums();
-        IEnumerable<GenreDTO> GetAllGenres();
+        IEnumerable<TrackBLL> GetAllTracks();
+        IEnumerable<AuthorBLL> GetAllAuthors();
+        IEnumerable<AlbumBLL> GetAllAlbums();
+        IEnumerable<GenreBLL> GetAllGenres();
 
-        TrackDTO FindTrack(string field, string value);
-        AuthorDTO FindAuthor(string field, string value);
-        AlbumDTO FindAlbum(string field, string value);
-        GenreDTO FindGenre(string field, string value);
+        IEnumerable<TrackRateBLL> GetTrackRate(string name);
+        IEnumerable<AlbumRateBLL> GetAlbumRate(string name);
 
-        IEnumerable<TrackDTO> GetTracksByAuthor(string category);
-        IEnumerable<TrackDTO> GetTracksByGenre(string category);
-        IEnumerable<TrackDTO> GetTracksByAlbum(string name);
+        TrackBLL FindTrack(string field, string value);
+        AuthorBLL FindAuthor(string field, string value);
+        AlbumBLL FindAlbum(string field, string value);
+        GenreBLL FindGenre(string field, string value);
+
+        IEnumerable<TrackBLL> GetTracksByAuthor(string category);
+        IEnumerable<TrackBLL> GetTracksByGenre(string category);
+        IEnumerable<TrackBLL> GetTracksByAlbum(string name);
 
     }
 }

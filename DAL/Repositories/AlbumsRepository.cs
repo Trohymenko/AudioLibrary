@@ -16,9 +16,9 @@ namespace DAL.Repositories
         {
             this.db = context;
         }
-        public IEnumerable<Album> GetAll()
+        public IEnumerable<Album> GetAll(Func<Album, bool> predicate)
         {
-            return db.Albums;
+            return db.Albums.Where(predicate);
         }
 
         public Album Get(int id)

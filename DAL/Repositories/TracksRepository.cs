@@ -16,9 +16,9 @@ namespace DAL.Repositories
         {
             this.db = context;
         }
-        public IEnumerable<Track> GetAll()
+        public IEnumerable<Track> GetAll(Func<Track,bool> predicate)
         {
-            return db.Tracks.Where(x=> true);
+            return db.Tracks.Where(predicate);
         }
 
         public Track Get(int id)

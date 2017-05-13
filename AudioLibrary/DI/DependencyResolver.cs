@@ -29,6 +29,7 @@ namespace AudioLibrary.DI
         {
             kernel.Bind<IGetInfoService>().To<GetInfoService>().WithConstructorArgument("TracksDB");
             kernel.Bind<IModifyService>().To<ModifyService>().WithConstructorArgument("TracksDB");
+            kernel.Bind<ISearchService>().To<SearchService>().WithConstructorArgument("TracksDB");
         }
     }
 }
