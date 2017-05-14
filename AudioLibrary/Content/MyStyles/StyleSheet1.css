@@ -1,0 +1,51 @@
+﻿
+.rating {
+    float: left;
+    width: 300px;
+}
+
+    .rating span {
+        float: right;
+        position: relative;
+    }
+
+        .rating span input {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            opacity: 0;
+        }
+
+        .rating span label {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            color: black;
+            background: #ccc;
+            font-size: 20px;
+            margin-right: 2px;
+            line-height: 20px;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+
+        .rating span:hover ~ span label,
+        .rating span:hover label,
+        .rating span.checked label,
+        .rating span.checked ~ span label {
+            background: #0026ff;
+            color: #FFF;
+        }
+
+.navbar-inverse .navbar-brand {
+    color: black;
+}
+.navbar-inverse .navbar-nav > li > a {
+    color: black;
+}
+element.style {
+    background-color: rgb(0,139,139);
+}
+
+

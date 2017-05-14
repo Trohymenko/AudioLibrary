@@ -11,9 +11,9 @@ namespace DAL.Entities
     public class TrackRate
     {
         public int TrackRateId { get; set; }
-        public int TrackRateValue { get; set; }
+        public double TrackRateValue { get; set; }
         public string UserName { get; set; }
         public int? TrackId { get; set; }
-        public Track Track { get; set; }
+        public virtual Track Track { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace DAL.Entities
         public int AlbumRateValue { get; set; }
         public string UserName { get; set; }
         public int? AlbumId { get; set; }
-        public Album Album { get; set; }
+        public virtual Album Album { get; set; }
     }
 }

@@ -46,11 +46,11 @@ namespace DAL
             db.Albums.AddRange(new List<Album> { UnknownAlbum1, UnknownAlbum2, UnknownAlbum3 });
             db.SaveChanges();
 
-            Track HowlingWolfTrack1 = new Track { TrackID = 0, TrackName = "Smokestack Lightnin'", Author = LightningHopkins, TrackAddress = "/files/lightning.mp3" };
+            Track LightningHopkinsTrack1 = new Track { TrackID = 0, TrackName = "Smokestack Lightnin'", Author = LightningHopkins, TrackAddress = "/files/lightning.mp3" };
             Track TheProdigyTrack1 = new Track { TrackID = 1, TrackName = "The day is my enemy", Author = TheProdigy, TrackAddress ="/files/theday.mp3" };
             Track JohnnyCashTrack1 = new Track { TrackID = 2, TrackName = "Ring of fire", Author = JohnnyCash, TrackAddress ="/files/ring.mp3" };
 
-            db.Tracks.AddRange(new List<Track> { HowlingWolfTrack1, TheProdigyTrack1, JohnnyCashTrack1 });
+            db.Tracks.AddRange(new List<Track> { LightningHopkinsTrack1, TheProdigyTrack1, JohnnyCashTrack1 });
             db.SaveChanges();
 
             Genre Blues = new Genre { GenreId = 0, GenreName = "Blues" };
@@ -65,11 +65,11 @@ namespace DAL
             db.Genres.AddRange(new List<Genre>{Blues, BreakBeat, Country});
             db.SaveChanges();
 
-            TrackRate rate1 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 0, TrackRateValue = 4, UserName = "user1" };
-            TrackRate rate2 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 1, TrackRateValue = 5, UserName = "user2" };
-            TrackRate rate3 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 2, TrackRateValue = 3, UserName = "user3" };
-            TrackRate rate4 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 3, TrackRateValue = 2, UserName = "user4" };
-            TrackRate rate5 = new TrackRate { TrackId = 0, Track = HowlingWolfTrack1, TrackRateId = 4, TrackRateValue = 5, UserName = "user5" };
+            TrackRate rate1 = new TrackRate { TrackId = 0, Track = JohnnyCashTrack1, TrackRateId = 0, TrackRateValue = 1, UserName = "user1" };
+            TrackRate rate2 = new TrackRate { TrackId = 0, Track = JohnnyCashTrack1, TrackRateId = 1, TrackRateValue = 1, UserName = "user2" };
+            TrackRate rate3 = new TrackRate { TrackId = 0, Track = JohnnyCashTrack1, TrackRateId = 2, TrackRateValue = 1, UserName = "user3" };
+            TrackRate rate4 = new TrackRate { TrackId = 0, Track = TheProdigyTrack1, TrackRateId = 3, TrackRateValue = 2, UserName = "user4" };
+            TrackRate rate5 = new TrackRate { TrackId = 0, Track = TheProdigyTrack1, TrackRateId = 4, TrackRateValue = 5, UserName = "user5" };
 
             IEnumerable<TrackRate> rates = new List<TrackRate> { rate1, rate2, rate3, rate4, rate5 };
             db.TracksRates.AddRange(rates);

@@ -26,13 +26,7 @@
                 @Html.DisplayFor(modelItem => item.TrackName)
             </td>
             <td>
-                @foreach (var author in ViewBag.Authors)
-                {
-                    if (item.AuthorID == author.AuthorID)
-                    {
-                        @author.AuthorName
-                    }
-                }
+                @Html.DisplayFor(modelItem => item.AuthorName)
             </td>
 
             <td>
@@ -42,6 +36,7 @@
                     <span><input type="radio" name="rating" id="str3" value="3"><label for="str3"></label></span>
                     <span><input type="radio" name="rating" id="str2" value="2"><label for="str2"></label></span>
                     <span><input type="radio" name="rating" id="str1" value="1"><label for="str1"></label></span>
+                    <input type="hidden" value=@item.TrackID id="trackid"/>
                 </div>
                 @Html.ActionLink("Edit", "Edit", new { }) |
                 @Html.ActionLink("Details", "Details", "Tracks", new { id = item.TrackID }, new { @class = "viewDialog", data_dialog_title = "Details" }) |
@@ -86,23 +81,25 @@
                 $(this).parent().addClass('checked');
             });
             $('input:radio').change(
-                function () {
-                    var userRating = this.value;
+                function (event) {
+                    var trackRate = this.value;
+                    var trackId = ('#trackid').value()
                     $.ajax({
-                        url: '/Controllers/PostRate',
                         type: 'POST',
-                        data: userRating,
-                        dataType: Int32,
-                        contentType: Int32,
-                        error: function (xhr) {
-                            alert('Error: ' + xhr.statusText);
+                        url: 'Home/PostTrackRate',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON({ trackId: trackId, rate: trackRate }),
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response != null && response.success) {
+                                alert(response.responseText);
+                            } 
                         },
-                        success: function (result) {
-                            CheckIfInvoiceFound(result);
-                        },
-                        async: true,
-                        processData: false
+                        error: function (response) {
+                            alert(response.responseText);  
+                        }
                     });
+                   
                 });
         });
     </script>

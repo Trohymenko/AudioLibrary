@@ -30,9 +30,18 @@ namespace AudioLibrary.Controllers
         }
 
         [HttpPost]
-        public void PostTrackRate(int trackId, int rate)
+        public ActionResult PostTrackRate(int rate, int id)
         {
-
+            if (User.Identity.IsAuthenticated)
+            {
+                TrackRateBLL trackRate = new TrackRateBLL() { TrackRateValue = rate, TrackId = id, UserName = User.Identity.Name };
+                dbMod.PostTrackRate(trackRate);
+                return Json(new { success = false, responseText = "Thank you" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = false, responseText = "You are not logged in" }, JsonRequestBehavior.AllowGet);
+            }
 
         }
         

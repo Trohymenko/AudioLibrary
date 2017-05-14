@@ -9,7 +9,7 @@ using DAL.Entities;
 
 namespace DAL
 {
-    class RatesUnitOfWork : IRatesUnitOfWork
+    public class RatesUnitOfWork : IRatesUnitOfWork
     {
         private TracksContext db;
 

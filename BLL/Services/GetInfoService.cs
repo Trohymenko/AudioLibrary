@@ -35,7 +35,12 @@ namespace BLL.Services
             IEnumerable<Track> trackList = Database.Tracks.GetAll(track => true);
             if (trackList != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>()
+                .ForMember(trackbll => trackbll.AuthorName,src => src.MapFrom(track => track.Author.AuthorName))
+
+                .ForMember(trackbll => trackbll.TrackRateAverage, src=>
+                src.MapFrom(track => track.TrackRates.Sum(rate=>rate.TrackRateValue)/track.TrackRates.Count())));
+
                 return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }
             else throw new Exception();

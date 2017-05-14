@@ -14,11 +14,13 @@ namespace BLL.Services
     {
         ITracksUnitOfWork TracksDB { get; set; }
         IRatesUnitOfWork RatesDB { get; set; }
+
         public static IKernel kernel;
         public ModifyService(string connectionstring)
         {
             kernel = new StandardKernel(new ServiceModule(connectionstring));
             TracksDB = kernel.Get<ITracksUnitOfWork>();
+            RatesDB = kernel.Get<IRatesUnitOfWork>();
         }
         public void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL)
         {

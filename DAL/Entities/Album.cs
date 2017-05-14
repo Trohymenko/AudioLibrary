@@ -11,7 +11,7 @@ namespace DAL.Entities
         public int AlbumId { get; set; }
         public string AlbumName { get; set; }
         public int? AuthorID { get; set; }
-        public Author Author { get; set; }
+        public virtual Author Author { get; set; }
         public virtual ICollection<Track> Tracks { get; set; }
         public virtual ICollection<Genre> Genres { get; set; }
         public virtual ICollection<AlbumRate> AlbumRates { get; set; }

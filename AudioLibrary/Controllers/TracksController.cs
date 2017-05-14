@@ -64,7 +64,7 @@ namespace AudioLibrary.Controllers
             var ratings = dbGet.GetTrackRate(dbTrack.TrackName);
             if (ratings.Count() > 0)
             {
-                var ratingSum = ratings.Sum(d => d.AlbumRateValue);
+                var ratingSum = ratings.Sum(d => d.TrackRateValue);
                 ViewBag.RatingSum = ratingSum;
                 var ratingCount = ratings.Count();
                 ViewBag.RatingCount = ratingCount;

@@ -26,9 +26,9 @@ namespace DAL.Repositories
             return db.TracksRates.Find(id);
         }
 
-        public void Create(TrackRate track)
+        public void Create(TrackRate trackRate)
         {
-            db.TracksRates.Add(track);
+            db.TracksRates.Add(trackRate);
             db.SaveChanges();
         }
 

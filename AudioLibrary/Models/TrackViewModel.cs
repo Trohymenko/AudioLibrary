@@ -12,5 +12,6 @@ namespace AudioLibrary.Models
         public string TrackAddress { get; set; }
         public int? AuthorID { get; set; }
         public string AuthorName { get; set; }
+        public int TrackRateAverage { get; set; } 
     }
 }

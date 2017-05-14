@@ -16,6 +16,7 @@ namespace BLL.Infrastructure
         public override void Load()
         {
             Bind<ITracksUnitOfWork>().To<TracksUnitOfWork>().WithConstructorArgument(connectionString);
+            Bind<IRatesUnitOfWork>().To<RatesUnitOfWork>().WithConstructorArgument(connectionString);
         }
     }
 }

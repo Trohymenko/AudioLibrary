@@ -8,9 +8,9 @@ namespace BLL.Entities
 {
     public class TrackRateBLL
     {
-        public int AlbumRateId { get; set; }
-        public int AlbumRateValue { get; set; }
+        public int TrackRateID { get; set; }
+        public int TrackRateValue { get; set; }
         public string UserName { get; set; }
-        public int? AlbumId { get; set; }
+        public int? TrackId { get; set; }
     }
 }
