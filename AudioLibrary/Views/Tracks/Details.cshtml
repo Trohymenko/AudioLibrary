@@ -1,17 +1,7 @@
 ﻿@model AudioLibrary.Models.TrackViewModel
 
-@{ 
-    decimal averageRate = 0;
-    foreach (var rate in ViewBag.TrackRates)
-    {
-        averageRate += rate.RateValue;
-    }
-    averageRate /= ViewBag.TrackRates.Count();
-}
-
 
 <div>
-    <h4>TrackViewModel</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -36,7 +26,3 @@
         </dd>
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

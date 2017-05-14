@@ -1,4 +1,16 @@
 ﻿
+.navbar-inverse .navbar-brand {
+    color: black;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: black;
+}
+
+element.style {
+    background-color: rgb(0,139,139);
+}
+
 .rating {
     float: left;
     width: 300px;
@@ -14,15 +26,16 @@
             top: 0px;
             left: 0px;
             opacity: 0;
+            
         }
 
         .rating span label {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             text-align: center;
             color: black;
-            background: #ccc;
+            background: url(/Images/StarFade.gif);
             font-size: 20px;
             margin-right: 2px;
             line-height: 20px;
@@ -34,18 +47,7 @@
         .rating span:hover label,
         .rating span.checked label,
         .rating span.checked ~ span label {
-            background: #0026ff;
+            background: url(/Images/StarGlow.gif);
+            
             color: #FFF;
         }
-
-.navbar-inverse .navbar-brand {
-    color: black;
-}
-.navbar-inverse .navbar-nav > li > a {
-    color: black;
-}
-element.style {
-    background-color: rgb(0,139,139);
-}
-
-

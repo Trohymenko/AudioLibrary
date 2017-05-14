@@ -28,7 +28,9 @@ namespace AudioLibrary
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
             bundles.Add(new StyleBundle("~/bundles/mystyles").Include(
-                        "~/Content/MyStyles/*.css"));
+                        "~/Content/MyStyles/*.css").Include(
+                        "~/Content/themes/base/*.css").Include("~/Content/themes/base/images/*.png"));
+
         }
     }
 }

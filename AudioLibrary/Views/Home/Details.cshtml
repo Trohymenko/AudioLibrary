@@ -4,25 +4,19 @@
     <h4>TrackViewModel</h4>
     <hr />
     <dl class="dl-horizontal">
-
-        @Html.DisplayNameFor(model => model.TrackName)
-       
+      
         <dd>
+            @Html.DisplayNameFor(model => model.TrackName)
+        </dd>
+        <dt>
             @Html.DisplayFor(model => model.TrackName)
-        </dd>
-        <dt>
+        </dt>
+
+        <dd>
             @Html.DisplayNameFor(model => model.AuthorName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AuthorName)
         </dd>
-        <dt>
-            @Html.Display("Author name:")
-        </dt>
-
-        <dd>
-            @ViewBag.Author.AuthorName
+          <dd>
+            @Html.DisplayFor(model => model.AuthorName)
         </dd>
 
     </dl>

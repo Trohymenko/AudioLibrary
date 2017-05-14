@@ -36,10 +36,11 @@ namespace BLL.Services
             if (trackList != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>()
-                .ForMember(trackbll => trackbll.AuthorName,src => src.MapFrom(track => track.Author.AuthorName))
+                    .ForMember(trackbll => trackbll.AuthorName, src => src.MapFrom(track => track.Author.AuthorName))
 
-                .ForMember(trackbll => trackbll.TrackRateAverage, src=>
-                src.MapFrom(track => track.TrackRates.Sum(rate=>rate.TrackRateValue)/track.TrackRates.Count())));
+                     .ForMember(trackbll => trackbll.TrackRateAverage, src =>
+                      src.MapFrom(track => track.TrackRates.Count() == 0 ? 0 : Math.Round(track.TrackRates.Sum(rate => rate.TrackRateValue) / (double)track.TrackRates.Count(), MidpointRounding.AwayFromZero)
+                      )));
 
                 return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }

@@ -42,15 +42,20 @@
                         for (int i = 6 - item.TrackRateAverage; i <= 5; i++)
                         {
                             var str = 6 - i;
-                            <span class="checked"><input type="radio" name="rating" id=@str value=@str><label for=@str></label></span>
+                            <span class="checked"><input type="radio" name="rating" id=@str value=@str ><label for=@str></label></span>
                         }
                     <input type="hidden" value=@item.TrackID id="trackid" name="Id"/>
                         }
                 </div>
-
-                @Html.ActionLink("Edit", "Edit", new { }) |
-                @Html.ActionLink("Details", "Details", "Tracks", new { id = item.TrackID }, new { @class = "viewDialog", data_dialog_title = "Details" }) |
+                @if (Request.IsAuthenticated && User.Identity.Name == "administrator")
+                {
+                @Html.ActionLink("Edit", "Edit", new { });
+                }
+                @Html.ActionLink("Details", "Details", "Tracks", new { id = item.TrackID }, new { @class = "viewDialog", data_dialog_title = "Details" })
+                @if (Request.IsAuthenticated && User.Identity.Name == "administrator")
+                {
                 @Html.ActionLink("Delete", "Delete", new { })
+                }
             </td>
             <td>
                 <audio width="400" height="300" controls src=@item.TrackAddress style="color:orange"></audio>
