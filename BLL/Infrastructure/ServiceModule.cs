@@ -1,6 +1,8 @@
 ﻿using Ninject.Modules;
 using DAL.Interfaces;
 using DAL;
+using DAL.Identity.Interfaces;
+using DAL.Identity;
 
 
 namespace BLL.Infrastructure
@@ -17,6 +19,7 @@ namespace BLL.Infrastructure
         {
             Bind<ITracksUnitOfWork>().To<TracksUnitOfWork>().WithConstructorArgument(connectionString);
             Bind<IRatesUnitOfWork>().To<RatesUnitOfWork>().WithConstructorArgument(connectionString);
+            Bind<IUnitOfWorkIdentity>().To<UnitOfWorkIdentity>().WithConstructorArgument(connectionString);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace AudioLibrary.Controllers
             IEnumerable<AuthorBLL> authorsBLL = dbGet.GetAllAuthors();
             Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
             ICollection<AuthorViewModel> authorList = Mapper.Map<IEnumerable<AuthorBLL>, IEnumerable<AuthorViewModel>>(authorsBLL).ToList();
+            authorList.OrderBy(author => author.AuthorName);
             return View(authorList);
         }
 

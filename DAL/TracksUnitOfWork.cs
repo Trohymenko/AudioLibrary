@@ -11,16 +11,16 @@ namespace DAL
 {
     public class TracksUnitOfWork : ITracksUnitOfWork
     {
-        private TracksContext db;
-
-        private TracksRepository tracksRepository;
-        private AlbumsRepository albumsRepository;
-        private AuthorsRepository authorsRepository;
-        private GenresRepository genresRepository;
+        private TracksContext context;
+       
+        private GenericRepository<Track> tracksRepository;
+        private GenericRepository<Album> albumsRepository;
+        private GenericRepository<Author> authorsRepository;
+        private GenericRepository<Genre> genresRepository;
 
         public TracksUnitOfWork(string connectionString)
         {
-            db = new TracksContext(connectionString);
+            context = new TracksContext(connectionString);
 
         }
         public IRepository<Track> Tracks
@@ -28,7 +28,7 @@ namespace DAL
             get
             {
                 if (tracksRepository == null)
-                    tracksRepository = new TracksRepository(db);
+                    tracksRepository = new GenericRepository<Track>(context);
                 return tracksRepository;
             }
         }
@@ -38,7 +38,7 @@ namespace DAL
             get
             {
                 if (albumsRepository == null)
-                    albumsRepository = new AlbumsRepository(db);
+                    albumsRepository = new GenericRepository<Album>(context);
                 return albumsRepository;
             }
         }
@@ -47,7 +47,7 @@ namespace DAL
             get
             {
                 if (genresRepository == null)
-                    genresRepository = new GenresRepository(db);
+                    genresRepository = new GenericRepository<Genre>(context);
                 return genresRepository;
             }
         }
@@ -56,19 +56,34 @@ namespace DAL
             get
             {
                 if (authorsRepository == null)
-                    authorsRepository = new AuthorsRepository(db);
+                    authorsRepository = new GenericRepository<Author>(context);
                 return authorsRepository;
             }
         }
 
         public void Save()
         {
-            db.SaveChanges();
+            context.SaveChanges();
+        }
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            this.disposed = true;
         }
 
         public void Dispose()
         {
-            db.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

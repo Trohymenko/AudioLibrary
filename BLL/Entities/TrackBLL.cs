@@ -10,9 +10,11 @@ namespace BLL.Entities
     {
         public int TrackID { get; set; }
         public string TrackName { get; set; }
-        public string TrackAddress { get; set; }
+        public string TrackLocation { get; set; }
         public int? AuthorID { get; set; }
         public string AuthorName { get; set; }
-        public int TrackRateAverage { get; set; }
+        public string AlbumName { get; set; }
+        public string GenreName { get; set; }
+        public double TrackRateAverage { get; set; }
     }
 }

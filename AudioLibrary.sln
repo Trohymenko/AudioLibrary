@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLibrary", "AudioLibrary\AudioLibrary.csproj", "{FF3702DF-5865-4A8E-A75D-CC2EC0BC4916}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{615F332F-6690-4EE4-BA5B-E85DDCD67896}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FF3702DF-5865-4A8E-A75D-CC2EC0BC4916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF3702DF-5865-4A8E-A75D-CC2EC0BC4916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF3702DF-5865-4A8E-A75D-CC2EC0BC4916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{615F332F-6690-4EE4-BA5B-E85DDCD67896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{615F332F-6690-4EE4-BA5B-E85DDCD67896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{615F332F-6690-4EE4-BA5B-E85DDCD67896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{615F332F-6690-4EE4-BA5B-E85DDCD67896}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

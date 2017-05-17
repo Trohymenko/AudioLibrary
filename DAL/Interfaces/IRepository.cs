@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace DAL.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<TEntity> where TEntity : class
     {
-        IEnumerable<T> GetAll(Func<T, bool> predicate);
-        T Get(int id);
-        void Create(T item);
-        void Update(T item);
+        IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null);
+        TEntity Get(int id);
+        void Create(TEntity item);
+        void Update(TEntity item);
         void Delete(int id);
-        T Find(Func<T, bool> predicate);
+        TEntity Find(Func<TEntity, bool> predicate);
 
     }
 }

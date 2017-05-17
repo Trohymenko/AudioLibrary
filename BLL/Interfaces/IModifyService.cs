@@ -9,12 +9,12 @@ namespace BLL.Interfaces
 {
     public interface IModifyService
     {
-        void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL,IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL);
+        void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL,IEnumerable<GenreBLL> genresBLL, AlbumBLL albumBLL);
         void CreateGenre(GenreBLL genreBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<AuthorBLL> authorsBLL);
         void CreateAuthor(AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<TrackBLL> tracksBLL);
         void CreateAlbum(AlbumBLL albumBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<TrackBLL> tracksBLL);
 
-        void UpdateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL);
+        void UpdateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, AlbumBLL albumBLL);
         void UpdateGenre(GenreBLL genreBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> albumsBLL, IEnumerable<AuthorBLL> authorsBLL);
         void UpdateAlbum(AlbumBLL albumBLL, AuthorBLL authorBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<GenreBLL> genresBLL);
         void UpdateAuthor(AuthorBLL authorBLL, IEnumerable<TrackBLL> tracksBLL, IEnumerable<AlbumBLL> authorsBLL, IEnumerable<GenreBLL> genresBLL);

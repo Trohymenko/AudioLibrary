@@ -32,15 +32,19 @@ namespace BLL.Services
         }
         public IEnumerable<TrackBLL> GetAllTracks()
         {
-            IEnumerable<Track> trackList = Database.Tracks.GetAll(track => true);
+            IEnumerable<Track> trackList = Database.Tracks.Get(track => true);
             if (trackList != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>()
                     .ForMember(trackbll => trackbll.AuthorName, src => src.MapFrom(track => track.Author.AuthorName))
 
+                    .ForMember(trackbll => trackbll.AlbumName, src => src.MapFrom(track => track.Album.AlbumName))
+
                      .ForMember(trackbll => trackbll.TrackRateAverage, src =>
                       src.MapFrom(track => track.TrackRates.Count() == 0 ? 0 : Math.Round(track.TrackRates.Sum(rate => rate.TrackRateValue) / (double)track.TrackRates.Count(), MidpointRounding.AwayFromZero)
-                      )));
+                      ))
+                      .ForMember(trackbll => trackbll.GenreName, src => src.MapFrom(track => track.Genres.FirstOrDefault()))
+                      );
 
                 return Mapper.Map<IEnumerable<Track>, IEnumerable<TrackBLL>>(trackList);
             }
@@ -49,7 +53,7 @@ namespace BLL.Services
 
         public IEnumerable<AlbumBLL> GetAllAlbums()
         {
-            IEnumerable<Album> albumList = Database.Albums.GetAll(album => true);
+            IEnumerable<Album> albumList = Database.Albums.Get();
             if (albumList != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<Album, AlbumBLL>());
@@ -60,7 +64,7 @@ namespace BLL.Services
 
         public IEnumerable<AuthorBLL> GetAllAuthors()
         {
-            IEnumerable<Author> authorList = Database.Authors.GetAll(author => true);
+            var authorList = Database.Authors.Get();
             if (authorList != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<Author, AuthorBLL>());
@@ -70,7 +74,7 @@ namespace BLL.Services
         }
         public IEnumerable<GenreBLL> GetAllGenres()
         {
-            IEnumerable<Genre> authorList = Database.Genres.GetAll(author => true);
+            IEnumerable<Genre> authorList = Database.Genres.Get();
             if (authorList != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<Genre, GenreBLL>());
@@ -81,7 +85,7 @@ namespace BLL.Services
 
         public IEnumerable<TrackRateBLL> GetTrackRate(string name)
         {
-            IEnumerable<TrackRate> trackRatesDb = Database.Tracks.GetAll(track => track.TrackName == name).FirstOrDefault().TrackRates;
+            IEnumerable<TrackRate> trackRatesDb = Database.Tracks.Get(track => track.TrackName == name).FirstOrDefault().TrackRates;
             Mapper.Initialize(cfg => cfg.CreateMap<TrackRate, TrackRateBLL>());
             return Mapper.Map<IEnumerable<TrackRate>, IEnumerable<TrackRateBLL>>(trackRatesDb);
 
@@ -95,11 +99,18 @@ namespace BLL.Services
 
         public TrackBLL GetTrack(int id)
         {
-            Track track = Database.Tracks.Get(id);
-            if (track != null)
+            Track trackDb = Database.Tracks.Get(id);
+            if (trackDb != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
-                return Mapper.Map<Track, TrackBLL>(track);
+                Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>()
+                    .ForMember(trackbll => trackbll.AuthorName, src => src.MapFrom(track => track.Author.AuthorName))
+                     .ForMember(trackbll => trackbll.GenreName, src => src.MapFrom(track => track.Genres.FirstOrDefault().GenreName))
+                      );
+                var result = Mapper.Map<Track, TrackBLL>(trackDb);
+                result.TrackRateAverage = trackDb.TrackRates.Count() == 0 ? 0 : 
+                    Math.Round(trackDb.TrackRates.Sum(rate => rate.TrackRateValue) / (double)trackDb.TrackRates.Count(), MidpointRounding.AwayFromZero);
+                return result;
+
             }
             else throw new Exception();
         }
@@ -137,7 +148,7 @@ namespace BLL.Services
         }
         public IEnumerable<TrackBLL> GetTracksByAuthor(string name)
         {
-            IEnumerable<Track> trackList = Database.Tracks.GetAll(track=>true).Where(x => x.Author.AuthorName == name).ToList();
+            IEnumerable<Track> trackList = Database.Tracks.Get(track=>true).Where(x => x.Author.AuthorName == name).ToList();
             if (trackList != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<Track, TrackBLL>());
@@ -147,7 +158,7 @@ namespace BLL.Services
         }
         public IEnumerable<TrackBLL> GetTracksByGenre(string name)
         {
-            IEnumerable<Track> trackList = Database.Genres.GetAll(genre=>true)
+            IEnumerable<Track> trackList = Database.Genres.Get(genre=>true)
                 .Select(genre => genre.Tracks).FirstOrDefault();
             if (trackList != null)
             {
@@ -158,7 +169,7 @@ namespace BLL.Services
         }
         public IEnumerable<TrackBLL> GetTracksByAlbum(string name)
         {
-            IEnumerable<Track> trackList = Database.Albums.GetAll(album=>true).Where(album => album.AlbumName == name)
+            IEnumerable<Track> trackList = Database.Albums.Get(album=>true).Where(album => album.AlbumName == name)
                 .Select(album => album.Tracks).FirstOrDefault();
             if (trackList != null)
             {

@@ -34,7 +34,6 @@ namespace AudioLibrary.Controllers
             return View(trackList);
         }
 
-        // GET: Tracks/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -53,43 +52,19 @@ namespace AudioLibrary.Controllers
             TrackViewModel track = Mapper.Map<TrackBLL, TrackViewModel>(dbTrack);
 
 
-            if (dbTrack.AuthorID != null)
-            {
-                AuthorBLL authorBLL = dbGet.GetAuthor((int)dbTrack.AuthorID);
-                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
-                AuthorViewModel author = Mapper.Map<AuthorBLL, AuthorViewModel>
-                    (authorBLL);
-                ViewBag.Author = author;
-            }
-            var ratings = dbGet.GetTrackRate(dbTrack.TrackName);
-            if (ratings.Count() > 0)
-            {
-                var ratingSum = ratings.Sum(d => d.TrackRateValue);
-                ViewBag.RatingSum = ratingSum;
-                var ratingCount = ratings.Count();
-                ViewBag.RatingCount = ratingCount;
-            }
-            else
-            {
-                ViewBag.RatingSum = 0;
-                ViewBag.RatingCount = 0;
-            }
             return PartialView(track);
         }
 
-        // GET: Tracks/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Tracks/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
 
                 return RedirectToAction("Index");
             }
@@ -98,21 +73,16 @@ namespace AudioLibrary.Controllers
                 return View();
             }
         }
-
-        // GET: Tracks/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Tracks/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int? id, FormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
-
                 return RedirectToAction("Index");
             }
             catch
@@ -121,19 +91,18 @@ namespace AudioLibrary.Controllers
             }
         }
 
-        // GET: Tracks/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
+        public ActionResult Delete(int Id)
+        {          
+            dbMod.DeleteTrack(Id);
+            return RedirectToAction("Index");
+            
         }
 
-        // POST: Tracks/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
 
                 return RedirectToAction("Index");
             }

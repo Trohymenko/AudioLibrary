@@ -8,6 +8,8 @@ using AudioLibrary.Models;
 using System.Text.RegularExpressions;
 using System;
 using System.Web;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace AudioLibrary.Controllers
 {
@@ -23,7 +25,7 @@ namespace AudioLibrary.Controllers
             this.dbMod = dbMod;
             this.dbSearch = dbSearch;
         }
-        
+
         public ActionResult Index()
         {
             return View();
@@ -35,7 +37,9 @@ namespace AudioLibrary.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 TrackRateBLL trackRate = new TrackRateBLL() { TrackRateValue = rate, TrackId = id, UserName = User.Identity.Name };
+
                 dbMod.PostTrackRate(trackRate);
+
                 return Json(new { success = false, responseText = "Thank you" }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -44,93 +48,119 @@ namespace AudioLibrary.Controllers
             }
 
         }
-        
+
         [HttpPost]
-        public ActionResult Search(string name, string searchCategory)
+        public ActionResult Search(string term, string searchCategory)
         {
-            switch (searchCategory)
+            ICollection<TrackViewModel> trackListView = null;
+            ICollection<TrackBLL> tracksListDb = null;
+            if (term.Length != 0)
             {
-                case "Tracks":
-                    IEnumerable<TrackBLL> tracks = null;
-
-                    if (name.Length != 0)
-                    {
-                        tracks = dbSearch.SearchForTrack("Tracks", name);
-                    }
-                    else
-                    {
-                        tracks = dbGet.GetAllTracks().ToList();
-                    }
-                    if (tracks.Count() <= 0)
-                    {
-                        return PartialView("NotFound");
-                    }
-                    Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
-                    ICollection<TrackViewModel> trackList = 
-                        Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<TrackViewModel>>(tracks).ToList();
-                    return View("TrackSearch",trackList);
-
-                case "Authors":
-                    IEnumerable<AuthorBLL> authors = null;
-                    if (name.Length != 0)
-                    {
-                        authors = dbSearch.SearchForAuthor("Authors", name);
-                    }
-                    else
-                    {
-                        authors = dbGet.GetAllAuthors().ToList();
-                    }
-                    if (authors.Count() <= 0)
-                    {
-                        return HttpNotFound();
-                    }
-                    Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, AuthorViewModel>());
-                    ICollection<AuthorViewModel> authorList =
-                        Mapper.Map<IEnumerable<AuthorBLL>, IEnumerable<AuthorViewModel>>(authors).ToList();
-                    return View("AuthorSearch",authorList);
-
-                case "Albums":
-                    IEnumerable<AlbumBLL> albums = null;
-                    if (name.Length != 0)
-                    {
-                        albums = dbSearch.SearchForAlbum("Albums", name);
-                    }
-                    else
-                    {
-                        albums = dbGet.GetAllAlbums().ToList();
-                    }
-                    if (albums.Count() <= 0)
-                    {
-                        return HttpNotFound();
-                    }
-                    Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, AlbumViewModel>());
-                    ICollection<AlbumViewModel> albumList = 
-                        Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<AlbumViewModel>>(albums).ToList();
-                    return View("AlbumSearch",albumList);
-
-                case "Genres":
-                    IEnumerable<GenreBLL> genres = null;
-                    if (name.Length != 0)
-                    {
-                        genres = dbSearch.SearchForGenre("Genres", name);
-                    }
-                    else
-                    {
-                        albums = dbGet.GetAllAlbums().ToList();
-                    }
-                    if (genres.Count() <= 0)
-                    {
-                        return HttpNotFound();
-                    }
-                    Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, GenreViewModel>());
-                    ICollection<GenreViewModel> genreList = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<GenreViewModel>>(genres).ToList();
-                    return View("GenreSearch",genreList);
-            }           
-            return View();
+                try
+                {
+                    tracksListDb = dbSearch.Search(term, searchCategory).ToList();
+                }
+                catch (Exception)
+                {
+                    return View("Index");
+                }
             }
-        public ActionResult Details(int id)
+            else
+            {
+                tracksListDb = dbGet.GetAllTracks().ToList();
+            }
+            if (tracksListDb.Count() == 0)
+            {
+                return PartialView("NotFound");
+            }
+            Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
+
+            trackListView = Mapper.Map<IEnumerable<TrackBLL>, IEnumerable<TrackViewModel>>(tracksListDb).ToList();
+
+            return View("TrackSearch", trackListView);
+        }
+    
+               
+        [HttpGet]
+        public ActionResult Upload()
         {
-            TrackBLL dbTrack = dbGet.GetTrack(id);
+            if (User.Identity.IsAuthenticated)
+                return View("Upload");
+            else return RedirectToAction("Login", "Account");
+        }
+
+        [HttpPost]
+        public ActionResult Upload(IEnumerable<HttpPostedFileBase> upload, string genreName)
+        {
+            if (upload != null)
+            {
+                byte[] b = new byte[128];
+                string titleFromStream;
+                string authorFromStream;
+                string albumFromStream;
+
+
+                foreach (var track in upload)
+                {
+                    byte[] trackByteArray = new byte[track.ContentLength];
+                    track.InputStream.Read(trackByteArray, 0, trackByteArray.Length);
+
+                    track.InputStream.Seek(-128, SeekOrigin.End);
+
+                    track.InputStream.Read(b, 0, 128);
+                    bool isSet = false;
+                    String sFlag = System.Text.Encoding.Default.GetString(b, 0, 3);
+                    if (sFlag.CompareTo("TAG") == 0)
+                    {
+                        isSet = true;
+                    }
+                    if (isSet)
+                    {
+                        titleFromStream = System.Text.Encoding.Default.GetString(b, 3, 30);
+                        titleFromStream = titleFromStream.Replace("\0", string.Empty);
+                       var uniqueFilePath = string.Format(@"/files/{0}.mp3", DateTime.Now.Ticks);
+                        try
+                        {
+                            track.SaveAs(Server.MapPath(uniqueFilePath));
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.Write(ex.Message);
+                            break;
+                        }
+                        
+                        authorFromStream = System.Text.Encoding.Default.GetString(b, 33, 30);
+                        authorFromStream = authorFromStream.Replace("\0", string.Empty);
+
+                        albumFromStream = System.Text.Encoding.Default.GetString(b, 63, 30);
+                        albumFromStream = albumFromStream.Replace("\0", string.Empty);
+
+                        TrackBLL newTrack = new TrackBLL { TrackName = titleFromStream, TrackLocation = uniqueFilePath };
+                        AuthorBLL author = new AuthorBLL { AuthorName = authorFromStream };                       
+                        AlbumBLL album = new AlbumBLL() { AlbumName = albumFromStream };
+                        List<GenreBLL> genres = new List<GenreBLL>();
+                        GenreBLL genre = new GenreBLL() {GenreName = genreName };
+                        genres.Add(genre);
+                        try
+                        {
+                            dbMod.CreateTrack(newTrack, author, genres, album);
+                            RedirectToAction("Upload");
+                        }
+                        catch
+
+                         {
+                            System.IO.File.Delete(Server.MapPath(uniqueFilePath));
+                         }
+
+                    }
+                }                               
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Details(int Id)
+        {
+            TrackBLL dbTrack = dbGet.GetTrack(Id);
             Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, TrackViewModel>());
             TrackViewModel track = Mapper.Map<TrackBLL, TrackViewModel>(dbTrack);
 
@@ -150,6 +180,15 @@ namespace AudioLibrary.Controllers
             }
             else
             return PartialView("Details2", track);
+
+        }
+        public ActionResult Delete(int Id)
+        {
+            TrackRateBLL rate = dbGet.GetTrackRate(dbGet.GetTrack(Id).TrackName).FirstOrDefault();
+            dbMod.DeleteTrackRate(rate);
+            dbMod.DeleteTrack(Id);
+
+            return RedirectToAction("Index");
         }
 
     }

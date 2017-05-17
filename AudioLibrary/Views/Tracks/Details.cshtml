@@ -18,11 +18,12 @@
             @Html.DisplayFor(model => model.AuthorName)
         </dd>
         <dt>
-            @Html.Display("Author name:")
+            <b>Genre:</b>
         </dt>
 
         <dd>
-            @ViewBag.Author.AuthorName
+            @Html.DisplayFor(model => model.GenreName)
         </dd>
+
     </dl>
 </div>

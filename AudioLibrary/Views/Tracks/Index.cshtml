@@ -4,7 +4,7 @@
 <script src='@Url.Content("~/Scripts/jquery-1.12.4.min.js")' type="text/javascript"></script>
 <script src='@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")' type="text/javascript"></script>
 <p>
-    @using (Html.BeginForm("Upload", "HomeController"))
+    @using (Html.BeginForm("Upload", "Home", FormMethod.Get))
     {
         <button type="submit" class="btn-primary">Upload</button>
     }
@@ -26,42 +26,43 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TrackName)
+                @Html.ActionLink(item.TrackName, "Details", "Tracks", new { Id = item.TrackID }, new { @class = "viewDialog", data_dialog_title = "Details" })
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AuthorName)
+                @Html.ActionLink(item.AuthorName, "Details", "Authors", new { Id = item.AuthorID }, new { @class = "viewDialog", data_dialog_title = "Details" })
             </td>
 
             <td>
                 <div class="rating">
-                    @{  for (int i = 1; i <= 5 - item.TrackRateAverage; i++)
-                        {
-                            var str = 6 - i;
+                    @{ int checkedId = item.TrackID + 100;
+                                for (int i = 1; i <= 5 - item.TrackRateAverage; i++)
+                                {
+                                    var str = 6 - i;
                             <span id="@item.TrackID"><input type="radio"  name="rating" id=@str value=@str><label for=@str></label></span>
+                                }
+                                for (int i = 6 - item.TrackRateAverage; i <= 5; i++)
+                                {
+                                    var str = 6 - i;
+                            <span class="checked" Id=@checkedId@str><input type="radio" name="rating" id=@str value=@str><label for=@str></label></span>
                         }
-                        for (int i = 6 - item.TrackRateAverage; i <= 5; i++)
-                        {
-                            var str = 6 - i;
-                            <span class="checked" @item.TrackID><input type="radio" name="rating" id=@str value=@str><label for=@str></label></span>
-                        }
-                        <input type="hidden" value=@item.TrackID id="trackid" name="Id" />
+                        <input type="hidden" value=@item.TrackID id=500 name=@item.TrackID />
                     }
                 </div>
                 @if (Request.IsAuthenticated && User.Identity.Name == "administrator")
                 {
                     @Html.ActionLink("Edit", "Edit", new { });
                 }
-                @Html.ActionLink("Details", "Details", "Tracks", new { id = item.TrackID }, new { @class = "viewDialog", data_dialog_title = "Details" })
-                @if (Request.IsAuthenticated && User.Identity.Name == "administrator")
+               
+                @if (Request.IsAuthenticated)
                 {
-                    @Html.ActionLink("Delete", "Delete", new { })
+                    @Html.ActionLink("Delete", "Delete", "Tracks", new { id = item.TrackID }, new { })
                 }
             </td>
             <td>
-                <audio width="400" height="300" controls src=@item.TrackAddress style="color:orange"></audio>
+                <audio width="400" height="300" controls src=@item.TrackLocation style="color:orange"></audio>
             </td>
         </tr>
-                        }
+         }
 
 </table>
 @section scripts{
@@ -88,15 +89,15 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            // Check Radio-box
 
 
-            $('.rating input').click(function () {
+            $('.rating input').click(function (event) {
                 $(this).parent().removeClass('checked');
                 $(this).parent().addClass('checked');
+                var parentId = $(this).parent().attr('id');
+                var path ='[name='+(parentId)+']'
                 var trackRate = this.value;
-                var trackId = $('input#trackid').val()
-
+                var trackId = $("input[type='hidden']" + path).val();           
                 $.ajax({
                     url: '/Home/PostTrackRate',
                     type: "POST",

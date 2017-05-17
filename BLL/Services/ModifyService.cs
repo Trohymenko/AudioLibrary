@@ -22,21 +22,26 @@ namespace BLL.Services
             TracksDB = kernel.Get<ITracksUnitOfWork>();
             RatesDB = kernel.Get<IRatesUnitOfWork>();
         }
-        public void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL)
+        public void CreateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, AlbumBLL albumBLL)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
             Track track = Mapper.Map<TrackBLL, Track>(trackBLL);
 
+            if (authorBLL != null)
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<AuthorBLL, Author>());
+                 track.Author = Mapper.Map<AuthorBLL, Author>(authorBLL);
+            }
             if (genresBLL != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, Genre>());
                 track.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }
 
-            if (albumsBLL != null)
+            if (albumBLL != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
-                track.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
+                track.Album = Mapper.Map<AlbumBLL, Album>(albumBLL);
             }
             TracksDB.Tracks.Create(track);
         }
@@ -110,7 +115,7 @@ namespace BLL.Services
             }
             TracksDB.Genres.Create(genre);
         }
-        public void UpdateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, IEnumerable<AlbumBLL> albumsBLL)
+        public void UpdateTrack(TrackBLL trackBLL, AuthorBLL authorBLL, IEnumerable<GenreBLL> genresBLL, AlbumBLL albumBLL)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TrackBLL, Track>());
             Track track = Mapper.Map<TrackBLL, Track>(trackBLL);
@@ -121,10 +126,10 @@ namespace BLL.Services
                 track.Genres = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<Genre>>(genresBLL).ToList();
             }
 
-            if (albumsBLL != null)
+            if (albumBLL != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<AlbumBLL, Album>());
-                track.Albums = Mapper.Map<IEnumerable<AlbumBLL>, IEnumerable<Album>>(albumsBLL).ToList();
+                track.Album = Mapper.Map<AlbumBLL, Album>(albumBLL);
             }
             TracksDB.Tracks.Update(track);
         }
@@ -202,6 +207,8 @@ namespace BLL.Services
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TrackRateBLL, TrackRate>());
             TrackRate trackRate = Mapper.Map<TrackRateBLL, TrackRate>(trackRateBLL);
+            var trackDb = TracksDB.Tracks.Get(track => track.TrackID == trackRateBLL.TrackId).FirstOrDefault();
+            trackRate.Track = trackDb;
             RatesDB.TracksRates.Create(trackRate);
         }
         public void PostAlbumRate(AlbumRateBLL albumRateBLL)

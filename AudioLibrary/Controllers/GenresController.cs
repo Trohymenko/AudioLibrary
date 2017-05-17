@@ -24,6 +24,7 @@ namespace AudioLibrary.Controllers
             IEnumerable<GenreBLL> genresBLL = dbGet.GetAllGenres();
             Mapper.Initialize(cfg => cfg.CreateMap<GenreBLL, GenreViewModel>());
             ICollection<GenreViewModel> genreList = Mapper.Map<IEnumerable<GenreBLL>, IEnumerable<GenreViewModel>>(genresBLL).ToList();
+            genreList.OrderBy(genre => genre.GenreName);
             return View(genreList);
         }
 

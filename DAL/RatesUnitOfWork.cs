@@ -11,14 +11,14 @@ namespace DAL
 {
     public class RatesUnitOfWork : IRatesUnitOfWork
     {
-        private TracksContext db;
+        private TracksContext context;
 
-        private TracksRatesRepository trackRateRepository;
-        private AlbumsRatesRepository albumRateRepository;
+        private GenericRepository<TrackRate> trackRateRepository;
+        private GenericRepository<AlbumRate> albumRateRepository;
 
         public RatesUnitOfWork(string connectionString)
         {
-            db = new TracksContext(connectionString);
+            context = new TracksContext(connectionString);
 
         }
         public IRepository<TrackRate> TracksRates
@@ -26,7 +26,7 @@ namespace DAL
             get
             {
                 if (trackRateRepository == null)
-                    trackRateRepository = new TracksRatesRepository(db);
+                    trackRateRepository = new GenericRepository<TrackRate>(context);
                 return trackRateRepository;
             }
         }
@@ -36,19 +36,34 @@ namespace DAL
             get
             {
                 if (albumRateRepository == null)
-                    albumRateRepository = new AlbumsRatesRepository(db);
+                    albumRateRepository = new GenericRepository<AlbumRate>(context);
                 return albumRateRepository;
             }
         }
 
         public void Save()
         {
-            db.SaveChanges();
+            context.SaveChanges();
+        }
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            this.disposed = true;
         }
 
         public void Dispose()
         {
-            db.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace DAL.Entities
         {
             Genres = new List<Genre>();
             Tracks = new List<Track>();
+            AlbumRates = new List<AlbumRate>();
         }
 
     }

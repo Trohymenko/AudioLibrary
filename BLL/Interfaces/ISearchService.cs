@@ -9,9 +9,6 @@ namespace BLL.Interfaces
 {
     public interface ISearchService
     {
-        IEnumerable<TrackBLL> SearchForTrack(string category, string name);
-        IEnumerable<AlbumBLL> SearchForAlbum(string category, string name);
-        IEnumerable<AuthorBLL> SearchForAuthor(string category, string name);
-        IEnumerable<GenreBLL> SearchForGenre(string category, string name);
+        IEnumerable<TrackBLL> Search(string term, string category);
     }
 }
